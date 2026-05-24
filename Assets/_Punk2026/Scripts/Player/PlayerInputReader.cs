@@ -21,6 +21,7 @@ namespace Punk2026.Player
         protected InputAction aimAction;    // 鼠标移动 / 右摇杆
         protected InputAction jumpAction;   // Space / 手柄 A
         protected InputAction dodgeAction;  // Left Shift / Sprint（复用为闪避）
+        protected InputAction fire;         //鼠标左键
 
         /// <summary>主相机引用，用于相机相对方向转换和鼠标射线投射</summary>
         protected Camera mainCamera;
@@ -82,6 +83,7 @@ namespace Punk2026.Player
             aimAction = actions["Look"];      // 对应 Look 动作（鼠标 delta）
             jumpAction = actions["Jump"];     // 对应 Jump 动作
             dodgeAction = actions["Sprint"];  // 复用 Sprint 动作作为闪避输入
+            fire = actions["Attack"];         // 对应Attack
         }
 
         // ========== 移动输入 ==========
@@ -193,6 +195,9 @@ namespace Punk2026.Player
 
         /// <summary>闪避键是否在本帧按下</summary>
         public virtual bool GetDodgePressed() => dodgeAction.WasPressedThisFrame();
+        
+        /// <summary>开火键是否在本帧按下</summary>
+        public virtual bool GetFirePressed() => fire.WasPressedThisFrame();
 
         // ========== DSP 时间映射（为节奏系统预留） ==========
 

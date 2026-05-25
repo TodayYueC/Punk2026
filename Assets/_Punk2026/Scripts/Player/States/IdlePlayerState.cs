@@ -5,11 +5,10 @@ namespace Punk2026.Player.States
     /// <summary>
     /// 待机状态 —— 玩家无移动输入时的默认状态
     /// 每帧逻辑：
-    ///   1. 检测跳跃/闪避输入
+    ///   1. 跳跃/闪避/射击检测
     ///   2. 贴地和重力维持
-    ///   3. 面向鼠标瞄准方向（俯视角核心：即使不动也能瞄准）
-    ///   4. 检测离地（掉落边缘）
-    ///   5. 有移动输入时切换到 Move 状态
+    ///   3. 面向移动方向（射击瞬间短暂面向瞄准方向，由 TryFire 锁定）
+    ///   4. 有移动输入时切换到 Move 状态
     /// </summary>
     public class IdlePlayerState : PlayerState
     {
@@ -35,9 +34,14 @@ namespace Punk2026.Player.States
             player.ApplyGravity();
             // 5. 闪避检测
             player.TryDodge();
+            // 5. 射击检测
+            player.TryFire();
 
-            // 6. 面向移动方向
-            player.FaceMoveDirection();
+            // 6. 面向移动方向（射击锁定期间由 TryFire 中的 FaceAimDirection 接管）
+            if (!player.isShootingRotationLocked)
+            {
+                player.FaceMoveDirection();
+            }
 
             // 7. 有移动输入或残余速度时，切换到移动状态
             var moveDir = player.input.GetWorldMoveDirection();

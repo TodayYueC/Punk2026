@@ -5,8 +5,8 @@ namespace Punk2026.Player.States
     /// <summary>
     /// 移动状态 —— 玩家有 WASD 输入时的运动状态
     /// 每帧逻辑：
-    ///   1. 跳跃/闪避/重力/贴地/离地检测
-    ///   2. 面向鼠标瞄准方向
+    ///   1. 射击/跳跃/闪避/重力/贴地/离地检测
+    ///   2. 面向移动方向（射击瞬间短暂面向瞄准方向，由 TryFire 锁定）
     ///   3. 有输入时加速（含刹车判定：反向输入时急停）
     ///   4. 无输入时摩擦减速
     ///   5. 速度归零时切换回 Idle
@@ -26,14 +26,21 @@ namespace Punk2026.Player.States
         protected override void OnStep(PlayerManager player)
         {
             // 基础检测
+            // 开火判定，不打断移动物理位移
+            player.TryFire();
             player.TryJump();
             player.SnapToGround();
             player.ApplyGravity();
             player.CheckFall();
             player.TryDodge();
+            
 
-            // 面向移动方向
-            player.FaceMoveDirection();
+            // 面向移动方向（射击锁定期间由 TryFire 中的 FaceAimDirection 接管）
+            if (!player.isShootingRotationLocked)
+            {
+                player.FaceMoveDirection();
+            }
+
 
             var moveDir = player.input.GetWorldMoveDirection();
 

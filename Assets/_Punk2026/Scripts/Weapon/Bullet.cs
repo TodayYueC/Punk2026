@@ -36,12 +36,13 @@ namespace Punk2026.Weapon
         // ========== 初始化 ==========
 
         /// <summary>
-        /// 子弹初始化 —— 从对象池取出后由 WeaponManager 调用
-        /// 设置飞行方向、伤害、存活时间和所属池引用
+        /// 子弹初始化 —— 从对象池取出后由 WeaponBase 子类调用
+        /// 设置飞行方向、伤害、速度、存活时间和所属池引用
         /// </summary>
         /// <param name="direction">飞行方向（会归一化）</param>
         /// <param name="damage">伤害值</param>
-        /// <param name="maxLifeTime">最大存活时间</param>
+        /// <param name="speed">飞行速度（单位/秒）</param>
+        /// <param name="maxLifeTime">最大存活时间（秒）</param>
         /// <param name="bulletPool">所属对象池（回收时需要）</param>
         public void Init(Vector3 direction, float damage,float speed, float maxLifeTime, IObjectPool<Bullet> bulletPool)
         {

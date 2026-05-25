@@ -196,8 +196,11 @@ namespace Punk2026.Player
         /// <summary>闪避键是否在本帧按下</summary>
         public virtual bool GetDodgePressed() => dodgeAction.WasPressedThisFrame();
         
-        /// <summary>开火键是否在本帧按下</summary>
+        /// <summary>开火键是否在本帧按下（仅按下那一帧）</summary>
         public virtual bool GetFirePressed() => fire.WasPressedThisFrame();
+
+        /// <summary>开火键是否正在按住（按住期间每帧返回 true）</summary>
+        public virtual bool GetFireHeld() => fire.IsPressed();
 
         // ========== DSP 时间映射（为节奏系统预留） ==========
 

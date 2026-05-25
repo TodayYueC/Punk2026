@@ -1,5 +1,6 @@
 using Punk2026.Actor;
 using Punk2026.Player.States;
+using Punk2026.Weapon;
 using UnityEngine;
 
 namespace Punk2026.Player
@@ -41,6 +42,15 @@ namespace Punk2026.Player
         /// <summary>从同一 GameObject 获取输入读取器</summary>
         protected virtual void InitInput() => input = GetComponent<PlayerInputReader>();
 
+        
+        // ========== 武器系统 ==========
+
+        /// <summary>武器管理器引用</summary>
+        public PlayerWeaponManager weaponManager { get; protected set; }
+
+        /// <summary>射击朝向锁定（射击瞬间为 true，阻止状态中的 FaceMoveDirection 覆盖瞄准朝向）</summary>
+        public bool isShootingRotationLocked { get; protected set; }
+
         /// <summary>初始化：基础组件 → 输入读取器 → 注册落地事件</summary>
         protected override void Awake()
         {
@@ -49,6 +59,8 @@ namespace Punk2026.Player
 
             // 落地时自动重置跳跃计数（允许多段跳重新开始）
             actorEvents.OnGroundEnter.AddListener(() => ResetJump());
+            //获取武器管理器
+            weaponManager = GetComponent<PlayerWeaponManager>();
         }
 
         // ========== 运动方法（封装配置参数，简化状态类调用） ==========
@@ -210,6 +222,36 @@ namespace Punk2026.Player
         public virtual Vector3 GetAimDirection()
         {
             return input.GetAimDirection(transformPosition);
+        }
+
+        /// <summary>
+        /// 尝试射击 —— 每帧由状态类调用
+        /// 按下：锁定朝向 + 面向瞄准 + 开火
+        /// 按住：保持锁定 + 面向瞄准 + 持续开火（武器冷却控制射速）
+        /// 松开：解除锁定，恢复面向移动方向
+        /// </summary>
+        public virtual bool TryFire()
+        {
+            // 按住射击键期间：锁定 + 转向 + 射击
+            if (input.GetFireHeld())
+            {
+                isShootingRotationLocked = true;
+                FaceAimDirection();
+
+                if (weaponManager != null)
+                {
+                    Vector3 aimDirection = GetAimDirection();
+                    if (aimDirection.sqrMagnitude > 0.001f)
+                    {
+                        weaponManager.TryFireCurrentWeapon(aimDirection);
+                    }
+                }
+                return true;
+            }
+
+            // 松开射击键：解除锁定
+            isShootingRotationLocked = false;
+            return false;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Punk2026.Player
 {
     /// <summary>
     /// 玩家管理器 —— 3C 系统的核心入口
-    /// 继承自 Actor<PlayerManager>，拥有完整的运动系统和状态机驱动能力
+    /// 继承自 Actor&lt;PlayerManager&gt;，拥有完整的运动系统和状态机驱动能力
     /// 职责：聚合输入读取、配置引用、跳跃/闪避/重力等玩家专属逻辑
     /// 不直接处理动画或相机，由 PlayerAnimator 和 TopDownCamera 各自监听
     /// </summary>
@@ -38,6 +38,16 @@ namespace Punk2026.Player
 
         /// <summary>当前闪避的方向向量（闪避开始时锁定）</summary>
         public Vector3 dodgeDirection { get; protected set; }
+
+        public override void TakeDamage(float damage)
+        {
+            // TODO: 角色受伤逻辑
+        }
+
+        public override void Die()
+        {
+            // TODO: 角色死亡逻辑
+        }
 
         /// <summary>从同一 GameObject 获取输入读取器</summary>
         protected virtual void InitInput() => input = GetComponent<PlayerInputReader>();

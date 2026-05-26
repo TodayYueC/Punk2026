@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Punk2026.Weapon.Bullet
   hitLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
 --- !u!1 &9133856690361628243
 GameObject:
   m_ObjectHideFlags: 0

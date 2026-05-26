@@ -67,7 +67,7 @@ namespace Punk2026.Weapon
         {
             // 存活时间检查
             lifeTimer += Time.deltaTime;
-            if (lifeTimer >= maxLifeTime) ReturnToPool();
+            if (lifeTimer >= maxLifeTime) { ReturnToPool(); return; }
 
             // 计算本帧移动距离和方向
             float moveDistance = velocity.magnitude * Time.deltaTime;
@@ -88,12 +88,18 @@ namespace Punk2026.Weapon
 
         /// <summary>
         /// 处理碰撞结果
-        /// TODO: 后续在此处对接 IDamageable 接口造成敌人伤害
+        /// 命中敌人时调用 EnemyManager.TakeDamage() 造成伤害，然后回收子弹
+        /// 使用 GetComponentInParent 而非 GetComponent：敌人可能有子物体 Collider
         /// </summary>
         private void HandleCollision(RaycastHit hit)
         {
-            // TODO: 在此处调用接口伤害敌人
-            // 例如：if (hit.collider.TryGetComponent(out IDamageable target)) target.TakeDamage(damage);
+            // 查找命中物体上的 EnemyManager 组件
+            var enemy = hit.collider.GetComponentInParent<Punk2026.Enemy.EnemyManager>();
+            if (enemy)
+            {
+                // 对敌人造成伤害（伤害值来自 WeaponConfig，通过 Init 传入）
+                enemy.TakeDamage(damage);
+            }
             ReturnToPool();
         }
 

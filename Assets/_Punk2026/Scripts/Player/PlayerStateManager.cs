@@ -7,7 +7,7 @@ namespace Punk2026.Player
 {
     /// <summary>
     /// 玩家状态机管理器 —— 注册并管理玩家的 5 个状态
-    /// 继承自 ActorStateManager<PlayerManager>，自动关联 PlayerManager 实体
+    /// 继承自 ActorStateManager&lt;PlayerManager&gt;，自动关联 PlayerManager 实体
     /// 状态列表顺序决定了 index 值，与 Animator 参数同步
     /// </summary>
     [RequireComponent(typeof(PlayerManager))]

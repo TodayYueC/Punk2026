@@ -57,6 +57,12 @@ namespace Punk2026.Actor
         /// <param name="hit">命中结果输出</param>
         /// <param name="layer">检测层级掩码</param>
         /// <param name="queryTriggerInteraction">是否检测 Trigger</param>
+        /// <summary>受击 —— 扣除生命值，HP 归零时触发死亡（由子类实现）</summary>
+        public abstract void TakeDamage(float damage);
+
+        /// <summary>死亡 —— 触发死亡逻辑（由子类实现，如敌人爆炸、玩家 GameOver）</summary>
+        public abstract void Die();
+
         public virtual bool SphereCast(Vector3 direction, float distance,
             out RaycastHit hit, int layer = Physics.DefaultRaycastLayers,
             QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Ignore)
